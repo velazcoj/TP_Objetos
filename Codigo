@@ -51,3 +51,23 @@ class Formacion {
 	method velocidadMaxima() {
 		return locomotoras.map({locomotora => locomotora.velocidadMaxima()}).min()
 	}
+
+// punto 4 // 
+	/*
+	eficiente() se lo pedimos a la clase Formacion, ya que tiene la lista de locomotoras, usamos el mensaje all para ver si cada una cumple
+	lo pedido y el mensaje arrastra5VecesSuPeso propio de la locomotora. Devuelve true o false
+	*/
+	method eficiente() {
+		return locomotoras.all({locomotora => locomotora.arrastreUtil() >= 5 * locomotora.peso()})
+	}
+	
+// punto 5 // 
+	/*
+	Esto se lo pedimos a la clase Formacion, ya que tiene la lista de locomotoras y vagones, con el mensaje sum, arrastreUtil propio
+	de las locomotoras y pestoTotalVagones, devuelve true o false.
+	*/
+	method pesoTotalVagones() {return vagones.sum({vagon => vagon.pesoMaximo()})}
+	method arrastreUtilTotal() {return locomotoras.sum({locomotora => locomotora.arrastreUtil()})}
+	method puedeMoverse() {
+		return self.arrastreUtilTotal() >= self.pesoTotalVagones()
+	}
