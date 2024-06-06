@@ -24,6 +24,7 @@ class VagonCarga inherits Vagon
 
 class Formacion {
   var property vagones = []
+// punto 1 //
   /*
 	totalPasajeros() se lo pedimos a la clase Formacion, ya que tiene la lista de vagones, con el mensaje sum, sin parametros
 	y devuelve la suma de la cantidad de pasajeros que transporta un vagon a traves del mensaje capacidadPasajeros propio del vagon
@@ -32,3 +33,21 @@ class Formacion {
 		return vagones.sum({vagon => vagon.capacidadPasajeros()})
 	}
 }
+
+// punto 2 // 
+	/*
+	vagonesLivianos() se lo pedimos a la clase formacion, ya que tiene la lista de vagones, primero con el mensaje filter para obtener la lista
+	de los vagones livianos con el mensaje esLiviano propio de los vagones y luego devolvemos el tamaño con el mensaje size
+	*/
+	method vagonesLivianos() {
+		return vagones.filter({vagon => vagon.vagonLiviano()}).size()
+	}
+	
+// punto 3 //
+	/*
+	velocidadMaxima() se lo pedimos a la clase Formacion, ya que tiene la lista de locomotoras, usamos el mensaje map para obtener la lista con la
+	velocidad maxima de cada locomotora y el mensaje min para obtener el menor
+	*/
+	method velocidadMaxima() {
+		return locomotoras.map({locomotora => locomotora.velocidadMaxima()}).min()
+	}
