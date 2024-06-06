@@ -80,3 +80,31 @@ class Formacion {
 	method puedeMoverse() {
 		return self.arrastreUtilTotal() >= self.pesoTotalVagones()
 	}
+// punto 6 
+	/*
+	empujeFaltante() se lo pedimos a la clase Formacion, ya que tiene la lista de vagones y locomotoras, con los mensajes puedeMoverse
+	pesoTotalVagones y sum. Devuelve 0 en caso de que se pueda mover y sino la resta del pesoTotalVagones con el arrastreUtil de las
+	locomotoras
+	*/
+	method empujeFaltante() {
+		if (self.puedeMoverse()) return 0
+		else return self.pesoTotalVagones() - self.arrastreUtilTotal()
+	}
+// punto 7 
+	method vagonMasPesado() {
+		return vagones.max({vagon => vagon.pesoMaximo()})
+	}
+
+class Deposito {
+	var property formaciones = []
+	var property locomotorasSueltas = []
+	
+	/*
+	vagonesMasPesados() se lo pedimos a la clase Deposito, ya que tiene la lista de formaciones, usamos los mensajes forEach, y vagonMasPesado 
+	propio de la clase Formacion. Devuelve un conjunto con los vagones pesados.
+	*/
+	method vagonesMasPesados() {
+		const set = #{}
+		formaciones.forEach({formacion => set.add(formacion.vagonMasPesado())})
+		return set
+	}
