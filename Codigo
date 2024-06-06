@@ -1,3 +1,11 @@
+class Locomotora {
+	var property peso = 1000
+	var property arrastreMaximo = 12000
+	var property velocidadMaxima = 80
+	
+	method arrastreUtil(){ return arrastreMaximo - peso }
+}
+
 class Vagon { 
 	method capacidadPasajeros() {return 0}
 	method pesoMaximo() { return 0 }
@@ -24,6 +32,7 @@ class VagonCarga inherits Vagon
 
 class Formacion {
   var property vagones = []
+  var property locomotoras = []
 // punto 1 //
   /*
 	totalPasajeros() se lo pedimos a la clase Formacion, ya que tiene la lista de vagones, con el mensaje sum, sin parametros
