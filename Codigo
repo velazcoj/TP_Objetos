@@ -94,11 +94,20 @@ class Formacion {
 	method vagonMasPesado() {
 		return vagones.max({vagon => vagon.pesoMaximo()})
 	}
-
+// punto 8 //
+	method cantidadUnidades() { return locomotoras.size() + vagones.size() }
+	method pesoTotalLocomotoras() { return locomotoras.sum({locomotora => locomotora.peso()}) }
+	method pesoFormacion() { return self.pesoTotalVagones() + self.pesoTotalLocomotoras() }
+	
+	method formacionCompleja() {
+		return self.cantidadUnidades() > 20 or self.pesoFormacion() > 10000;
+	}
+}
 class Deposito {
 	var property formaciones = []
 	var property locomotorasSueltas = []
 	
+	// punto 7 //
 	/*
 	vagonesMasPesados() se lo pedimos a la clase Deposito, ya que tiene la lista de formaciones, usamos los mensajes forEach, y vagonMasPesado 
 	propio de la clase Formacion. Devuelve un conjunto con los vagones pesados.
@@ -108,3 +117,13 @@ class Deposito {
 		formaciones.forEach({formacion => set.add(formacion.vagonMasPesado())})
 		return set
 	}
+	// punto 8 //
+	/*
+	El método necesitaConductorExperimentado() (en la clase Deposito) delega a cada objeto de clase Formacion, perteneciente a la lista de formaciones, el mensaje formacionCompleja().
+	Al llamar al método formacionCompleja() este acude a la definición de cantidadUnidades() y a la de pesoFormacion() para returnar su resultado.
+	En pesoFormacion() tenemos delegaciones en los métodos pesoTotalVagones() y pesoTotalLocomotoras(), los cuales envían el mensaje peso() a sus respectivos objetos para retornar las sumas.
+	*/
+	method necesitaConductorExperimentado() {
+		return formaciones.any({formacion => formacion.formacionCompleja()})
+	}
+}
