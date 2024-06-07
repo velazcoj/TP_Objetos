@@ -33,7 +33,7 @@ class VagonCarga inherits Vagon
 class Formacion {
   var property vagones = []
   var property locomotoras = []
-// punto 1 //
+	// punto 1 //
   /*
 	totalPasajeros() se lo pedimos a la clase Formacion, ya que tiene la lista de vagones, con el mensaje sum, sin parametros
 	y devuelve la suma de la cantidad de pasajeros que transporta un vagon a traves del mensaje capacidadPasajeros propio del vagon
@@ -43,7 +43,7 @@ class Formacion {
 	}
 }
 
-// punto 2 // 
+	// punto 2 // 
 	/*
 	vagonesLivianos() se lo pedimos a la clase formacion, ya que tiene la lista de vagones, primero con el mensaje filter para obtener la lista
 	de los vagones livianos con el mensaje esLiviano propio de los vagones y luego devolvemos el tamaño con el mensaje size
@@ -52,7 +52,7 @@ class Formacion {
 		return vagones.filter({vagon => vagon.vagonLiviano()}).size()
 	}
 	
-// punto 3 //
+	// punto 3 //
 	/*
 	velocidadMaxima() se lo pedimos a la clase Formacion, ya que tiene la lista de locomotoras, usamos el mensaje map para obtener la lista con la
 	velocidad maxima de cada locomotora y el mensaje min para obtener el menor
@@ -61,7 +61,7 @@ class Formacion {
 		return locomotoras.map({locomotora => locomotora.velocidadMaxima()}).min()
 	}
 
-// punto 4 // 
+	// punto 4 // 
 	/*
 	eficiente() se lo pedimos a la clase Formacion, ya que tiene la lista de locomotoras, usamos el mensaje all para ver si cada una cumple
 	lo pedido y el mensaje arrastra5VecesSuPeso propio de la locomotora. Devuelve true o false
@@ -70,7 +70,7 @@ class Formacion {
 		return locomotoras.all({locomotora => locomotora.arrastreUtil() >= 5 * locomotora.peso()})
 	}
 	
-// punto 5 // 
+	// punto 5 // 
 	/*
 	Esto se lo pedimos a la clase Formacion, ya que tiene la lista de locomotoras y vagones, con el mensaje sum, arrastreUtil propio
 	de las locomotoras y pestoTotalVagones, devuelve true o false.
@@ -80,7 +80,7 @@ class Formacion {
 	method puedeMoverse() {
 		return self.arrastreUtilTotal() >= self.pesoTotalVagones()
 	}
-// punto 6 
+	// punto 6 
 	/*
 	empujeFaltante() se lo pedimos a la clase Formacion, ya que tiene la lista de vagones y locomotoras, con los mensajes puedeMoverse
 	pesoTotalVagones y sum. Devuelve 0 en caso de que se pueda mover y sino la resta del pesoTotalVagones con el arrastreUtil de las
@@ -90,11 +90,11 @@ class Formacion {
 		if (self.puedeMoverse()) return 0
 		else return self.pesoTotalVagones() - self.arrastreUtilTotal()
 	}
-// punto 7 
+	// punto 7 
 	method vagonMasPesado() {
 		return vagones.max({vagon => vagon.pesoMaximo()})
 	}
-// punto 8 //
+	// punto 8 //
 	method cantidadUnidades() { return locomotoras.size() + vagones.size() }
 	method pesoTotalLocomotoras() { return locomotoras.sum({locomotora => locomotora.peso()}) }
 	method pesoFormacion() { return self.pesoTotalVagones() + self.pesoTotalLocomotoras() }
@@ -125,5 +125,19 @@ class Deposito {
 	*/
 	method necesitaConductorExperimentado() {
 		return formaciones.any({formacion => formacion.formacionCompleja()})
+	}
+
+	/*
+	agregarLocomotoraNecesariaParaMoverse(formacion) se lo pedimos a la clase Deposito, ya que cuenta con la lista de formaciones.
+	Para empezar nos fijamos el resultado de puedeMoverse() en Formacion, y de no ser verdadero se busca una locomotora posible (con el arrestre suficiente),
+	apoyandonos del método formacion.empujeFaltante() de Formacion y arrastreUtil de Locomotora. Luego agregamos dicha locomotora a la formacion.
+	*/
+	method agregarLocomotoraNecesariaParaMoverse(formacion) {
+		if (not formacion.puedeMoverse()) {
+			const locomotoraPosible = locomotorasSueltas.find{locomotora => locomotora.arrastreUtil() >= formacion.empujeFaltante()}
+			if (locomotoraPosible != null) {
+				formacion.locomotoras().add((locomotoraPosible))
+			}
+		}
 	}
 }
