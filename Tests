@@ -1,1 +1,125 @@
-Tests
+import tpEntrega.*
+
+describe "Test TP Trenes y Depositos" {
+	
+	//Vagones
+	const estrellaDeLAmanecer = new VagonPasajeros(largo = 24, anchoUtil = 3)
+	const rayoDelNorte = new VagonPasajeros(largo = 20, anchoUtil = 1.8)
+	const auroraBoreal = new VagonPasajeros(largo = 16, anchoUtil = 2.95)
+	const brisaDelMar = new VagonPasajeros(largo = 12, anchoUtil = 2.05)
+	const rayoDeLuna = new VagonPasajeros(largo = 8, anchoUtil = 4)
+	const tranquilidad = new VagonPasajeros(largo = 4, anchoUtil = 2.2)
+	const colosoDelHierro = new VagonCarga(cargaMaxima = 30)
+	const giganteDelEste = new VagonCarga(cargaMaxima = 190)
+	const titanDelSur = new VagonCarga(cargaMaxima = 95)
+	const guardianDelSilencio = new VagonCarga(cargaMaxima = 80)
+	const horizonteAzul = new VagonCarga(cargaMaxima = 35)
+	const llamaDelDesierto = new VagonCarga(cargaMaxima = 120)
+	
+	//Locomotoras
+	const centella = new Locomotora(peso = 2000, arrastreMaximo = 15000, velocidadMaxima = 120)
+	const arcoiris = new Locomotora(peso = 9024, arrastreMaximo = 18000, velocidadMaxima = 94)
+	const cometa = new Locomotora(peso = 900, arrastreMaximo = 6000, velocidadMaxima = 240)
+	const estrellaFugaz = new Locomotora(peso = 8789, arrastreMaximo = 40000, velocidadMaxima = 100)
+	const aurora = new Locomotora(peso = 13000, arrastreMaximo = 29000, velocidadMaxima = 40)
+	const meteorito = new Locomotora(peso = 4500, arrastreMaximo = 20000, velocidadMaxima = 77)
+	const halcon = new Locomotora(peso = 1350, arrastreMaximo = 6900, velocidadMaxima = 200)
+	const dragonDeFuego = new  Locomotora(peso = 1500, arrastreMaximo = 20000, velocidadMaxima = 90)
+	const relampago = new Locomotora(peso = 6000, arrastreMaximo = 75000, velocidadMaxima = 30)
+	
+	//Formaciones
+	const sanMartin = 
+	new Formacion(locomotoras = [centella,dragonDeFuego,relampago] , vagones = 
+		[estrellaDeLAmanecer,rayoDelNorte,auroraBoreal,colosoDelHierro,giganteDelEste,titanDelSur])
+		
+	//Testeamos Punto 1
+	test "La formacion San Martin puede transportar 560 pasajeros" {
+		assert.equals(560, sanMartin.totalPasajeros())
+	}
+	test "Una formacion sin vagones no puede transportar pasajeros"{
+		const formacionSinVagones = new Formacion(locomotoras = [centella,dragonDeFuego], vagones = [])
+		assert.equals(0, formacionSinVagones.totalPasajeros())
+	}
+	//Testeamos Punto 2
+	test "La formacion San Martin tiene 3 vagones livianos"{
+		assert.equals(3, sanMartin.vagonesLivianos())
+	}
+	test "Una formacion con solo vagones livianos devuelve el total de vagones" {
+    	const vagonLiviano1 = new VagonPasajeros(largo = 3, anchoUtil = 2)
+    	const vagonLiviano2 = new VagonCarga(cargaMaxima = 100)
+    	const formacionSoloLivianos = new Formacion(locomotoras = [centella], vagones = [vagonLiviano1, vagonLiviano2])
+    	assert.equals(2, formacionSoloLivianos.vagonesLivianos())
+	}
+	//Testeamos Punto 3
+	test "La velocidad maxima de una formacion con una sola locomotora es la velocidad de esa locomotora" {
+    	const formacionUnaLocomotora = new Formacion(locomotoras = [centella], vagones = [])
+    	assert.equals(120, formacionUnaLocomotora.velocidadMaxima())
+	}
+	test "La velocidad maxima de una formacion con varias locomotoras es la minima de las velocidades maximas de las locomotoras" {
+    	const formacionVariasLocomotoras = new Formacion(locomotoras = [centella, dragonDeFuego, relampago], 
+    	  vagones = [estrellaDeLAmanecer, rayoDelNorte])
+    	assert.equals(30, formacionVariasLocomotoras.velocidadMaxima())
+	}
+	//Testeamos Punto 4
+	test "La formacion sanMartin es eficiente"{
+		assert.that(sanMartin.eficiente())
+	}
+	test "Una formacion con una locomotora que no arrastra 5 veces su peso no es eficiente" {
+    	const locomotoraIneficiente = new Locomotora(peso = 2000, arrastreMaximo = 9000, velocidadMaxima = 100)
+    	const formacionNoEficiente = new Formacion(locomotoras = [locomotoraIneficiente, centella], vagones = [estrellaDeLAmanecer])
+    	assert.notThat(formacionNoEficiente.eficiente())
+	}
+	//Testeamos Punto 5
+	test "La formacion sanMartin puede moverse"{
+		assert.that(sanMartin.puedeMoverse())
+	}
+	test "Una formacion que no puede moverse devuelve false"{
+		const formacionQueNoSeMueve = 
+		new Formacion(locomotoras = [centella, dragonDeFuego], vagones = [estrellaDeLAmanecer,rayoDelNorte,auroraBoreal,colosoDelHierro])
+		assert.notThat(formacionQueNoSeMueve.puedeMoverse())
+	}
+	//Testeamos Punto 6
+	test "A la formacion sanMartin le faltan 0 kilos ya que se puede mover"{
+		assert.equals(0, sanMartin.empujeFaltante())
+	}
+	test "A la formacion sanMiguel le faltan 13490 kilos para poder moverse"{
+		const sanMiguel = 
+		new Formacion(locomotoras = [centella, dragonDeFuego], vagones = [estrellaDeLAmanecer,rayoDelNorte,auroraBoreal,colosoDelHierro])
+		assert.equals(13490, sanMiguel.empujeFaltante())
+	}
+	//Testeamos Punto 7
+	test "El deposito devuelve el vagon mas pesado de cada formacion"{
+		const formacionA = new Formacion(locomotoras = [centella], vagones = [estrellaDeLAmanecer, rayoDelNorte])
+		const formacionB = new Formacion(locomotoras = [dragonDeFuego], vagones = [colosoDelHierro, giganteDelEste, titanDelSur])
+		const deposito = new Deposito(formaciones = [formacionA, formacionB], locomotorasSueltas = [])
+		// El vagon mas pesado de la formacion A es estrellaDeLAmanecer
+		// El vagon mas pesado de la formacion B es giganteDelEste
+		const vagonesPesados = deposito.vagonesMasPesados()
+		assert.that(vagonesPesados.contains(estrellaDeLAmanecer))
+		assert.that(vagonesPesados.contains(giganteDelEste))
+		assert.equals(2, vagonesPesados.size())
+	}
+	//Testeamos Punto 8
+	test "El deposito necesita un conductor experimentado cuando tiene una formacion con mas de 20 unidades"{
+		const formacionComplejaPorUnidades = 
+		new Formacion(locomotoras = [centella,dragonDeFuego,relampago,arcoiris,cometa,estrellaFugaz,aurora,meteorito,halcon],
+			vagones = [estrellaDeLAmanecer,rayoDelNorte,auroraBoreal,colosoDelHierro,giganteDelEste,titanDelSur,brisaDelMar,rayoDeLuna,
+				tranquilidad,guardianDelSilencio,horizonteAzul,llamaDelDesierto])
+		const deposito = new Deposito(formaciones = [formacionComplejaPorUnidades], locomotorasSueltas = [])
+		assert.that(deposito.necesitaConductorExperimentado())
+	}
+	test "El desposito necesita un conductor experimentado cuando tiene una formacion con peso total mayor a 10000kg"{
+		const formacionComplejaPorPeso = new Formacion(locomotoras = [relampago], vagones = [estrellaDeLAmanecer, giganteDelEste])
+		const deposito = new Deposito(formaciones = [formacionComplejaPorPeso], locomotorasSueltas = [])
+		assert.that(deposito.necesitaConductorExperimentado())
+	}
+	test "El deposito no necesita un conductor experimentado cuando ninguna formacion es compleja"{
+		const quilmes = 
+		new Formacion(locomotoras = [centella, dragonDeFuego], vagones = [colosoDelHierro,giganteDelEste,titanDelSur])
+		const deposito = new Deposito(formaciones = [quilmes], locomotorasSueltas = [])
+		assert.notThat(deposito.necesitaConductorExperimentado())
+	}
+	//Testeamos Punto 9
+	
+	
+}
