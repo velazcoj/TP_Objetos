@@ -126,7 +126,7 @@ class Deposito {
 	method necesitaConductorExperimentado() {
 		return formaciones.any({formacion => formacion.formacionCompleja()})
 	}
-
+	// punto 9 //
 	/*
 	agregarLocomotoraNecesariaParaMoverse(formacion) se lo pedimos a la clase Deposito, ya que cuenta con la lista de formaciones.
 	Para empezar nos fijamos el resultado de puedeMoverse() en Formacion, y de no ser verdadero se busca una locomotora posible (con el arrestre suficiente),
