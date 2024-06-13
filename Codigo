@@ -41,7 +41,6 @@ class Formacion {
 	method totalPasajeros() {
 		return vagones.sum({vagon => vagon.capacidadPasajeros()})
 	}
-}
 
 	// punto 2 // 
 	/*
