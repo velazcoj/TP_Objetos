@@ -4,6 +4,7 @@ class Locomotora {
 	var property velocidadMaxima = 80
 	
 	method arrastreUtil(){ return arrastreMaximo - peso }
+	method eficiente() { return self.arrastreUtil() >= 5 * peso }
 }
 
 class Vagon { 
@@ -66,7 +67,7 @@ class Formacion {
 	lo pedido y el mensaje arrastra5VecesSuPeso propio de la locomotora. Devuelve true o false
 	*/
 	method eficiente() {
-		return locomotoras.all({locomotora => locomotora.arrastreUtil() >= 5 * locomotora.peso()})
+		return locomotoras.all({locomotora => locomotora.eficiente()})
 	}
 	
 	// punto 5 // 
@@ -102,6 +103,7 @@ class Formacion {
 		return self.cantidadUnidades() > 20 or self.pesoFormacion() > 10000;
 	}
 }
+
 class Deposito {
 	var property formaciones = []
 	var property locomotorasSueltas = []
@@ -112,9 +114,7 @@ class Deposito {
 	propio de la clase Formacion. Devuelve un conjunto con los vagones pesados.
 	*/
 	method vagonesMasPesados() {
-		const set = #{}
-		formaciones.forEach({formacion => set.add(formacion.vagonMasPesado())})
-		return set
+		return formaciones.map({formacion => formacion.vagonMasPesado()})
 	}
 	// punto 8 //
 	/*
