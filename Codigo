@@ -57,8 +57,8 @@ class Formacion {
 	velocidadMaxima() se lo pedimos a la clase Formacion, ya que tiene la lista de locomotoras, usamos el mensaje map para obtener la lista con la
 	velocidad maxima de cada locomotora y el mensaje min para obtener el menor
 	*/
-	method velocidadMaxima() {
-		return locomotoras.map({locomotora => locomotora.velocidadMaxima()}).min()
+	method vagonesLivianos() {
+		return vagones.count({vagon => vagon.vagonLiviano()})
 	}
 
 	// punto 4 // 
