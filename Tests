@@ -40,6 +40,21 @@ describe "Test TP Trenes y Depositos" {
 		const formacionSinVagones = new Formacion(locomotoras = [centella,dragonDeFuego], vagones = [])
 		assert.equals(0, formacionSinVagones.totalPasajeros())
 	}
+	test "Una formacion con vagones de ancho util justo por encima del limite puede transportar pasajeros correctamente"{
+		const vagonLimiteAncho = new VagonPasajeros(largo = 10, anchoUtil = 2.5) //Serian 10 metros
+		const formacionLimiteAncho = new Formacion(locomotoras = [centella], vagones = [vagonLimiteAncho])
+		assert.equals(80, formacionLimiteAncho.totalPasajeros())
+	}
+	test "Una formacion con vagones de pasajeros y de carga solo cuenta los pasajeros de los vagones de pasajeros"{
+		const vagonCarga = new VagonCarga(cargaMaxima = 1000)
+		const vagonPasajeros = new VagonPasajeros(largo = 10, anchoUtil = 3) // 100 pasajeros
+		const formacion = new Formacion(locomotoras = [centella], vagones = [vagonCarga, vagonPasajeros])
+		assert.equals(100, formacion.totalPasajeros())
+	}
+	test "Una formacion con solo vagones de carga no puede transportar pasajeros"{
+		const formacionSoloCarga = new Formacion(locomotoras = [centella], vagones = [colosoDelHierro,giganteDelEste])
+		assert.equals(0, formacionSoloCarga.totalPasajeros())
+	}
 	//Testeamos Punto 2
 	test "La formacion San Martin tiene 3 vagones livianos"{
 		assert.equals(3, sanMartin.vagonesLivianos())
@@ -49,6 +64,26 @@ describe "Test TP Trenes y Depositos" {
     	const vagonLiviano2 = new VagonCarga(cargaMaxima = 100)
     	const formacionSoloLivianos = new Formacion(locomotoras = [centella], vagones = [vagonLiviano1, vagonLiviano2])
     	assert.equals(2, formacionSoloLivianos.vagonesLivianos())
+	}
+	test "Un vagon de pasajeros justo en el limite es liviano"{
+		const vagonPasajeros = new VagonPasajeros(largo = 3.9, anchoUtil = 1) // 2496kg
+		const formacion = new Formacion(locomotoras = [], vagones = [vagonPasajeros])
+		assert.equals(1,formacion.vagonesLivianos())
+	}
+	test "Un vagon de pasajeros que supera el limite no es liviano"{
+		const vagonPasajeros = new VagonPasajeros(largo = 3.95, anchoUtil = 1) // 2528kg
+		const formacion = new Formacion(locomotoras = [], vagones = [vagonPasajeros])
+		assert.equals(0, formacion.vagonesLivianos())
+	}
+	test "Un vagon de carga justo en el limite es liviano"{
+		const vagonCarga = new VagonCarga(cargaMaxima = 2339) // 2499kg
+		const formacion = new Formacion(locomotoras = [], vagones = [vagonCarga])
+		assert.equals(1,formacion.vagonesLivianos())
+	}
+	test "Un vagon de carga que supera el limite no es liviano"{
+		const vagonCarga = new VagonCarga(cargaMaxima = 2341) // 2501kg
+		const formacion = new Formacion(locomotoras = [centella], vagones =[vagonCarga])
+		assert.equals(0, formacion.vagonesLivianos())
 	}
 	//Testeamos Punto 3
 	test "La velocidad maxima de una formacion con una sola locomotora es la velocidad de esa locomotora" {
@@ -120,6 +155,19 @@ describe "Test TP Trenes y Depositos" {
 		assert.notThat(deposito.necesitaConductorExperimentado())
 	}
 	//Testeamos Punto 9
-	
-	
+	test "Agregar una locomotora a una formacion que ya se puede mover no cambia la formacion"{
+		const deposito = new Deposito(formaciones = [sanMartin] , locomotorasSueltas = [halcon])
+		const formacionInicial = sanMartin.locomotoras().size()
+		deposito.agregarLocomotoraNecesariaParaMoverse(sanMartin)
+		const formacionFinal = sanMartin.locomotoras().size()
+		assert.equals(formacionInicial, formacionFinal)
+	}
+	test "Agregar una locomotora a una formacion que no puede moverse y tiene una locomotora suelta que permite que se pueda mover"{
+		const formacionQueNoSeMueve = new Formacion(locomotoras = [centella, dragonDeFuego],
+			vagones =[estrellaDeLAmanecer,rayoDelNorte,auroraBoreal,colosoDelHierro])
+		const deposito = new Deposito(formaciones = [formacionQueNoSeMueve], locomotorasSueltas = [relampago])
+		deposito.agregarLocomotoraNecesariaParaMoverse(formacionQueNoSeMueve)
+		assert.that(formacionQueNoSeMueve.puedeMoverse())
+		assert.equals(3,formacionQueNoSeMueve.locomotoras().size())
+	}
 }
