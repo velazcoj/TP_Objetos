@@ -170,4 +170,10 @@ describe "Test TP Trenes y Depositos" {
 		assert.that(formacionQueNoSeMueve.puedeMoverse())
 		assert.equals(3,formacionQueNoSeMueve.locomotoras().size())
 	}
+	test "Agregar una locomotora a una formacion que no puede moverse y no tiene una locomotora suelta que permite que se pueda mover mantiene igual la formacion"{
+		const formacionQueNoSeMueve = new Formacion(locomotoras = [centella], vagones = [giganteDelEste,titanDelSur,colosoDelHierro])
+		const deposito = new Deposito(formaciones = [formacionQueNoSeMueve], locomotorasSueltas = [arcoiris])
+		deposito.agregarLocomotoraNecesariaParaMoverse(formacionQueNoSeMueve)
+		assert.equals(1,formacionQueNoSeMueve.locomotoras().size())
+	}
 }
